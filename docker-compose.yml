@@ -18,7 +18,7 @@ services:
     depends_on: 
       - api
     ports:
-      - 80:80
+      - "4200:4200"
     networks:
       - internal_network
   db:
