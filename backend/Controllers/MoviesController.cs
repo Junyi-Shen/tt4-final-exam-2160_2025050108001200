@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using backend.Data;
 using backend.Models;
 
 namespace backend.Controllers
@@ -10,9 +9,9 @@ namespace backend.Controllers
     [ApiController]
     public class MoviesController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public MoviesController(AppDbContext context)
+        public MoviesController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -37,7 +36,7 @@ namespace backend.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Movie>> CreateMovie(Movie movie)
+        public async Task<ActionResult<Movie>> PostMovie(Movie movie)
         {
             _context.Movies.Add(movie);
             await _context.SaveChangesAsync();
@@ -46,7 +45,7 @@ namespace backend.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateMovie(int id, Movie movie)
+        public async Task<IActionResult> PutMovie(int id, Movie movie)
         {
             if (id != movie.ID)
             {
@@ -54,16 +53,31 @@ namespace backend.Controllers
             }
 
             _context.Entry(movie).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!MovieExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return NoContent();
         }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMovie(int id)
         {
             var movie = await _context.Movies.FindAsync(id);
-
             if (movie == null)
             {
                 return NotFound();
@@ -73,6 +87,11 @@ namespace backend.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        private bool MovieExists(int id)
+        {
+            return _context.Movies.Any(e => e.ID == id);
         }
     }
 }
