@@ -7,9 +7,16 @@ import { AppComponent } from './app.component';
 import { MoviesComponent } from './movies/movies.component';
 
 @NgModule({
-  declarations: [AppComponent, MoviesComponent],
-  imports: [BrowserModule, FormsModule, HttpClientModule],
+  declarations: [
+    AppComponent,
+    MoviesComponent
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpClientModule
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
