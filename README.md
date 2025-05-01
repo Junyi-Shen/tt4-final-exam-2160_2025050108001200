@@ -99,7 +99,11 @@ Each question is worth 0.5 points. Total: **10 points**
 12. What does `[HttpPost]` represent in a controller?  
    - A) A file upload  
    - B) An HTML POST form  
+<<<<<<< HEAD
    - **C) An endpoint for POST request** 
+=======
+   - **C) An endpoint for POST requests** 
+>>>>>>> 39e2dae691680f3ebfd61dd2e37c63b4ae864667
    - D) A redirect  
 
 ---
