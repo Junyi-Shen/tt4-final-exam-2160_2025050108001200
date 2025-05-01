@@ -1,34 +1,30 @@
-import { Component, OnInit } from '@angular/core';
-import { MovieService } from '../movie.service';
-import { Movie } from '../models/movie';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-movies',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './movies.component.html',
   styleUrls: ['./movies.component.scss']
 })
-export class MoviesComponent implements OnInit {
-  movies: Movie[] = [];
-  newMovie: Movie = { id: 0, title: '', genre: '', watched: false, rating: 0 };
+export class MoviesComponent {
+  movies: any[] = [];
+  newMovie = {
+    title: '',
+    genre: '',
+    rating: 0,
+    watched: false
+  };
 
-  constructor(private movieService: MovieService) {}
-
-  ngOnInit(): void {
-    this.getMovies();
+  addMovie() {
+    const newEntry = { ...this.newMovie, id: Date.now() };
+    this.movies.push(newEntry);
+    this.newMovie = { title: '', genre: '', rating: 0, watched: false };
   }
 
-  getMovies(): void {
-    this.movieService.getMovies().subscribe(data => this.movies = data);
-  }
-
-  addMovie(): void {
-    this.movieService.createMovie(this.newMovie).subscribe(() => {
-      this.getMovies();
-      this.newMovie = { id: 0, title: '', genre: '', watched: false, rating: 0 };
-    });
-  }
-
-  deleteMovie(id: number): void {
-    this.movieService.deleteMovie(id).subscribe(() => this.getMovies());
+  deleteMovie(id: number) {
+    this.movies = this.movies.filter(m => m.id !== id);
   }
 }
